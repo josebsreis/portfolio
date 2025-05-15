@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue May 13 2025 08:39:40 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Thu May 15 2025 08:31:56 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="681055c829f3eb27e4f15c19" data-wf-site="681055c829f3eb27e4f15c27" lang="en">
 <head>
   <meta charset="utf-8">
@@ -240,20 +240,21 @@ html:has(.nav_1_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
                   <div class="nav_1_links_text">about,</div>
                   <div class="nav_line"></div>
                 </a>
-                <link rel="prefetch" href="/about">
+                <link rel="prerender" href="/about">
               </li>
               <li class="nav_1_links_item">
                 <a href="work.html" class="nav_1_links_link is-desktop w-inline-block">
                   <div class="nav_1_links_text">work,</div>
                   <div class="nav_line"></div>
                 </a>
-                <link rel="prefetch" href="/work">
+                <link rel="prerender" href="/work">
               </li>
               <li class="nav_1_links_item">
                 <a href="playground.html" class="nav_1_links_link is-desktop w-inline-block">
                   <div class="nav_1_links_text">playground,</div>
                   <div class="nav_line"></div>
                 </a>
+                <link rel="prerender" href="/playground">
               </li>
               <li class="nav_1_links_item">
                 <a id="open-form" href="#" class="nav_1_links_link is-desktop w-inline-block">
@@ -1023,15 +1024,15 @@ button:focus-visible,
 </style>
       <script data-barba-script="">
   function initAboutDescriptionLogic() {
-    const container = document.querySelector(".about_descriptions");
-    const wrapper = document.querySelector(".about_descriptions_inner");
-    const card = document.querySelector(".description_card_wrapper");
-    const cardContent = document.querySelector(".description_card_animate");
-    const closeButton = document.querySelector(".close_button");
-    const hoverArea = document.querySelector(".about_bg_hover");
-    const descriptionNumber = document.getElementById("description_number");
-    const arrowLeft = document.getElementById("description_arrow-left");
-    const arrowRight = document.getElementById("description_arrow-right");
+    const container             = document.querySelector(".about_descriptions");
+    const wrapper               = document.querySelector(".about_descriptions_inner");
+    const card                  = document.querySelector(".description_card_wrapper");
+    const cardContent           = document.querySelector(".description_card_animate");
+    const closeButton           = document.querySelector(".close_button");
+    const hoverArea             = document.querySelector(".about_bg_hover");
+    const descriptionNumber     = document.getElementById("description_number");
+    const arrowLeft             = document.getElementById("description_arrow-left");
+    const arrowRight            = document.getElementById("description_arrow-right");
     const sections = [
       "about-info",
       "about-tools",
@@ -1041,11 +1042,11 @@ button:focus-visible,
     ];
     let currentIndex = 0;
     const buttons = {
-      btn_abt_info: "about-info",
-      btn_abt_tools: "about-tools",
-      btn_abt_services: "about-services",
+      btn_abt_info:    "about-info",
+      btn_abt_tools:   "about-tools",
+      btn_abt_services:"about-services",
       btn_abt_beliefs: "about-beliefs",
-      btn_abt_clients: "about-clients",
+      btn_abt_clients: "about-clients"
     };
     function hideAllSections() {
       sections.forEach(id => {
@@ -1084,24 +1085,23 @@ button:focus-visible,
       currentIndex = index;
       updateCounter();
       gsap.fromTo(container, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-      gsap.fromTo(card, { height: 0 }, { height: "30rem", duration: 0.5, ease: "power2.out" });
+      gsap.fromTo(card,      { height: 0 }, { height: "30rem", duration: 0.5, ease: "power2.out" });
       gsap.delayedCall(0.5, () => animateSectionIn(section));
     }
     function openSectionByIndex(index) {
       const newIndex = (index + sections.length) % sections.length;
       const newSectionId = sections[newIndex];
-      const newSection = document.getElementById(newSectionId);
+      const newSection   = document.getElementById(newSectionId);
       if (!newSection) return;
-      const currentSectionId = sections[currentIndex];
-      const currentSection = document.getElementById(currentSectionId);
-      if (newIndex === currentIndex) return;
+      const currentSection = document.getElementById(sections[currentIndex]);
+      if (newIndex === currentIndex || !currentSection) return;
       gsap.to(currentSection, {
         opacity: 0,
         duration: 0.2,
         onComplete: () => {
           currentSection.style.display = "none";
-          newSection.style.display = "flex";
-          newSection.style.opacity = "1";
+          newSection.style.display     = "flex";
+          newSection.style.opacity     = "1";
           currentIndex = newIndex;
           updateCounter();
           gsap.set(Array.from(newSection.children), { opacity: 0, y: 30 });
@@ -1121,6 +1121,7 @@ button:focus-visible,
         gsap.to(el, { scale: 1, duration: 0.1 });
       });
     }
+    // wire up the 5 buttons
     Object.entries(buttons).forEach(([btnId, sectionId]) => {
       const btn = document.getElementById(btnId);
       if (btn) {
@@ -1136,106 +1137,70 @@ button:focus-visible,
       arrowRight.addEventListener("click", () => openSectionByIndex(currentIndex + 1));
       addTapAnimation(arrowRight);
     }
-    // Add tap animation to close button
+    // close-button tap
     addTapAnimation(closeButton);
+    // track if mouse is over the card itself
     let isHoveringCard = false;
     if (card) {
       card.addEventListener("mouseenter", () => { isHoveringCard = true; });
       card.addEventListener("mouseleave", () => { isHoveringCard = false; });
     }
-    // ✨ IMPROVED Mouse-follow with momentum logic
-    let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
-    let animating = false;
-    // Initialize close button with opacity 0
-    if (closeButton) {
+    // ─── Desktop‐only follow cursor & hover‐area logic ─────────────────
+    const isDesktop = window.matchMedia('(pointer: fine)').matches;
+    if (isDesktop && closeButton && hoverArea) {
+      // init
       closeButton.style.opacity = "0";
       gsap.set(closeButton, { x: 0, y: 0 });
-    }
-    function animateCloseButton() {
-      currentX += (targetX - currentX) * 0.15;
-      currentY += (targetY - currentY) * 0.15;
-      gsap.set(closeButton, {
-        x: currentX,
-        y: currentY
-      });
-      if (Math.abs(targetX - currentX) > 0.1 || Math.abs(targetY - currentY) > 0.1) {
-        requestAnimationFrame(animateCloseButton);
-      } else {
-        animating = false;
+      let targetX = 0, targetY = 0,
+          currentX = 0, currentY = 0,
+          animating = false;
+      function animateCloseButton() {
+        currentX += (targetX - currentX) * 0.15;
+        currentY += (targetY - currentY) * 0.15;
+        gsap.set(closeButton, { x: currentX, y: currentY });
+        if (Math.abs(targetX - currentX) > 0.1 || Math.abs(targetY - currentY) > 0.1) {
+          requestAnimationFrame(animateCloseButton);
+        } else {
+          animating = false;
+        }
       }
-    }
-    // Get the parent container of the close button for position reference
-    const buttonParent = closeButton ? closeButton.parentElement : document.body;
-    // This makes the button follow the mouse across the entire document
-    document.addEventListener("mousemove", (e) => {
-      if (closeButton && buttonParent) {
-        // Get the parent's position as reference
-        const parentRect = buttonParent.getBoundingClientRect();
-        // Calculate position relative to the parent
+      document.addEventListener("mousemove", e => {
+        const parentRect = closeButton.parentElement.getBoundingClientRect();
         targetX = e.clientX - parentRect.left - (closeButton.offsetWidth / 2);
-        targetY = e.clientY - parentRect.top - (closeButton.offsetHeight / 2);
+        targetY = e.clientY - parentRect.top  - (closeButton.offsetHeight/ 2);
         if (!animating) {
           animating = true;
           requestAnimationFrame(animateCloseButton);
         }
-      }
-    });
-    // Track if the hover area is currently being hovered
-    let isHovering = false;
-    // Only change opacity based on hover area and add tap animation triggers
-    if (hoverArea && closeButton) {
+      });
       hoverArea.addEventListener("mouseenter", () => {
-        isHovering = true;
         gsap.to(closeButton, { opacity: 1, duration: 0.2 });
       });
       hoverArea.addEventListener("mouseleave", () => {
-        isHovering = false;
         gsap.to(closeButton, { opacity: 0, duration: 0.2 });
-        // Reset scale when leaving hover area
-        gsap.to(closeButton, { scale: 1, duration: 0.1 });
+        gsap.to(closeButton, { scale:   1, duration: 0.1 });
       });
-      // Add mousedown/mouseup events to the hover area that will trigger the tap animation on the button
       hoverArea.addEventListener("mousedown", () => {
-        if (isHovering) {
-          gsap.to(closeButton, { scale: 0.9, duration: 0.1 });
-        }
+        gsap.to(closeButton, { scale: 0.9, duration: 0.1 });
       });
       hoverArea.addEventListener("mouseup", () => {
-        if (isHovering) {
-          gsap.to(closeButton, { scale: 1, duration: 0.1 });
-        }
+        gsap.to(closeButton, { scale: 1,   duration: 0.1 });
       });
-      // Add click event to trigger fade out animation after tap
       hoverArea.addEventListener("click", () => {
-        if (isHovering) {
-          // First do the tap animation
-          gsap.to(closeButton, { 
-            scale: 0.9, 
-            duration: 0.1,
-            onComplete: () => {
-              // Then animate back to normal scale
-              gsap.to(closeButton, { 
-                scale: 1, 
-                duration: 0.1,
-                onComplete: () => {
-                  // Then fade out
-                  gsap.to(closeButton, { 
-                    opacity: 0, 
-                    duration: 0.3
-                  });
-                }
-              });
-            }
-          });
-        }
+        // tap → fade out
+        gsap.fromTo(closeButton,
+          { scale: 0.9 },
+          { scale: 1, opacity: 0, duration: 0.3 }
+        );
       });
     }
+    // ───────────────────────────────────────────────────────────────────
+    // click outside card to close all
     if (wrapper) {
       wrapper.addEventListener("click", () => {
         if (!isHoveringCard) {
-          const currentSection = document.getElementById(sections[currentIndex]);
-          gsap.to(currentSection, { opacity: 0, duration: 0.2 });
+          const currentSec = document.getElementById(sections[currentIndex]);
+          gsap.to(currentSec, { opacity: 0, duration: 0.2 });
           gsap.to(cardContent, {
             opacity: 0,
             duration: 0.3,
@@ -1250,9 +1215,9 @@ button:focus-visible,
                     duration: 0.4,
                     onComplete: () => {
                       container.style.display = "none";
-                      card.style.height = "30rem";
+                      card.style.height     = "30rem";
                       cardContent.style.opacity = 1;
-                      container.style.opacity = 1;
+                      container.style.opacity   = 1;
                       sections.forEach(id => {
                         const sec = document.getElementById(id);
                         if (sec) {
@@ -1269,6 +1234,7 @@ button:focus-visible,
         }
       });
     }
+    // initial reveal of the five buttons
     const buttonsToAnimate = document.querySelectorAll(".btn_abt_t");
     gsap.set(buttonsToAnimate, { opacity: 0, y: "100%" });
     gsap.to(buttonsToAnimate, {
@@ -1280,55 +1246,40 @@ button:focus-visible,
       ease: "power2.out"
     });
   }
+  // re-init on Barba page change or first load
   barba.hooks.afterEnter(() => {
     initAboutDescriptionLogic();
   });
-  document.addEventListener("DOMContentLoaded", () => {
-    initAboutDescriptionLogic();
-  });
+  document.addEventListener("DOMContentLoaded", initAboutDescriptionLogic);
 </script>
       <script data-barba-script="">
-  // Define neon colors if not already defined
+  // neon button background effect
   if (typeof neonColors === 'undefined') {
     var neonColors = [
-      "#39FF14", // Neon Green
-      "#FF073A", // Neon Red
-      "#29ABE2", // Neon Blue
-      "#FF6EC7", // Neon Pink
-      "#FFFF33", // Neon Yellow
-      "#00FFFF"  // Neon Cyan
+      "#39FF14", "#FF073A", "#29ABE2",
+      "#FF6EC7", "#FFFF33", "#00FFFF"
     ];
   }
-  document.querySelectorAll('.btn_abt_t').forEach(function(button) {
-    var bgPlus  = button.querySelector('.btn_abt_bg-plus');
-    var moreSvg = button.querySelector('.more-svg');
+  document.querySelectorAll('.btn_abt_t').forEach(button => {
+    const bgPlus  = button.querySelector('.btn_abt_bg-plus');
+    const moreSvg = button.querySelector('.more-svg');
     if (!bgPlus) return;
-    // Start collapsed
     bgPlus.style.height   = '0%';
     bgPlus.style.overflow = 'hidden';
-    // Track hover state to prevent stroke reset on rapid re-entry
-    var hoverActive = false;
-    button.addEventListener('mouseenter', function() {
+    let hoverActive = false;
+    button.addEventListener('mouseenter', () => {
       hoverActive = true;
-      // Pick a random neon and grow
-      var neon = neonColors[Math.floor(Math.random() * neonColors.length)];
-      gsap.to(bgPlus, {
-        height: '100%',
-        backgroundColor: neon,
-        duration: 0.4,
-        ease: 'power2.out'
-      });
-      // Make more-svg dark immediately
-      if (moreSvg) moreSvg.style.stroke = 'var(--swatch--dark)';
+      const neon = neonColors[Math.floor(Math.random() * neonColors.length)];
+      gsap.to(bgPlus, { height: '100%', backgroundColor: neon, duration: 0.4, ease: 'power2.out' });
+      if (moreSvg) moreSvg.style.stroke = '#000000';
     });
-    button.addEventListener('mouseleave', function() {
+    button.addEventListener('mouseleave', () => {
       hoverActive = false;
       gsap.to(bgPlus, {
         height: '0%',
         duration: 0.4,
         ease: 'power2.in',
-        onComplete: function() {
-          // Only reset colors if still not hovered
+        onComplete: () => {
           if (!hoverActive) {
             bgPlus.style.backgroundColor = '';
             if (moreSvg) moreSvg.style.stroke = '';
@@ -1560,12 +1511,19 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
   <div class="modal_connect u-hflex-right-center">
     <div class="page-scripts w-embed w-script">
       <style>
-.connect_bottom_links .connect_bottom_link {
-  transition: opacity 0.2s ease;
-}
-.connect_bottom_links:hover .connect_bottom_link:not(:hover) {
-  opacity: 0.33;
-}
+  /* existing link hover styles */
+  .connect_bottom_links .connect_bottom_link {
+    transition: opacity 0.2s ease;
+  }
+  .connect_bottom_links:hover .connect_bottom_link:not(:hover) {
+    opacity: 0.33;
+  }
+  /* when .modal-open is on <body>, prevent scrolling but don’t reposition */
+  body.modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
 </style>
       <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -1574,19 +1532,39 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
     const closeBtn      = document.querySelector('.form_close_svg');
     const formRight     = document.querySelector('.form_right');
     const openBtn       = document.getElementById('open-form');
-    const openBtnMobile       = document.getElementById('open-form-mobile');
+    const openBtnMobile = document.getElementById('open-form-mobile');
     const forgotWrapper = document.querySelector('.forgot_wrapper');
     const forgotMessage = document.querySelector('.forgot_message');
     const forgotItems   = forgotMessage ? Array.from(forgotMessage.children) : [];
     const forgotBack    = document.querySelector('.forgot_back');
     const forgotClose   = document.querySelector('.forgot_close');
+    let scrollY = 0;
     // Main modal timeline
     const tl = gsap.timeline({ paused: true });
-    tl.set(modal,     { display: 'flex' })
-      .to(overlay,    { opacity: 1, duration: 0.4, ease: 'power2.out' })
+    tl
+      .eventCallback('onStart', () => {
+        // capture scroll position
+        scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        // lock scroll at current position
+        document.body.style.position = 'fixed';
+        document.body.style.top      = `-${scrollY}px`;
+        document.body.style.width    = '100%';
+        document.body.classList.add('modal-open');
+        // show the modal
+        gsap.set(modal, { display: 'flex' });
+      })
+      .to(overlay,    { opacity: 1, duration: 0.4, ease: 'power2.out' }, '<')
       .from(formRight, { x: '100%', rotationZ: 10, duration: 0.6, ease: 'power4.out' }, '<')
       .eventCallback('onReverseComplete', () => {
+        // hide modal
         gsap.set(modal, { display: 'none' });
+        // unlock scroll
+        document.body.classList.remove('modal-open');
+        document.body.style.position = '';
+        document.body.style.top      = '';
+        document.body.style.width    = '';
+        // restore scroll position
+        window.scrollTo(0, scrollY);
         if (forgotWrapper) forgotWrapper.style.display = 'none';
       });
     // Forgot prompt timeline
@@ -1597,31 +1575,27 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
       .eventCallback('onReverseComplete', () => {
         if (forgotWrapper) forgotWrapper.style.display = 'none';
       });
-    // Open modal
-if (openBtn)       openBtn.addEventListener('click', () => tl.play());
-if (openBtnMobile) openBtnMobile.addEventListener('click', () => tl.play());
-		// Close via X button
+    // Open modal (buttons)
+    if (openBtn)       openBtn.addEventListener('click', () => tl.play());
+    if (openBtnMobile) openBtnMobile.addEventListener('click', () => tl.play());
+    // Close via X button
     if (closeBtn) closeBtn.addEventListener('click', () => tl.reverse());
-        // Overlay click
+    // Overlay click
     if (overlay) overlay.addEventListener('click', () => {
-      // On tablet and mobile (max-width 991px), just close the modal
       if (window.matchMedia('(max-width: 991px)').matches) {
+        // on mobile/tablet, just close
         tl.reverse();
       } else {
-        // desktop: show forgot prompt
+        // on desktop, show "forgot" prompt first
         ftl.play();
       }
     });
-    // Forgot back -> hide forgot prompt only
+    // Forgot back -> hide only prompt
     if (forgotBack) forgotBack.addEventListener('click', () => ftl.reverse());
-        // Forgot close -> hide prompt then close modal
+    // Forgot close -> hide prompt then close modal
     if (forgotClose) forgotClose.addEventListener('click', () => {
-      // reverse the forgot prompt
       ftl.reverse();
-      // after a short delay, start closing the main modal (overlaps animations)
-      setTimeout(() => {
-        tl.reverse();
-      }, 200);
+      setTimeout(() => tl.reverse(), 200);
     });
   });
 </script>
@@ -1648,7 +1622,6 @@ if (openBtnMobile) openBtnMobile.addEventListener('click', () => tl.play());
         <h1 class="form_title u-text-style-h1">let&#x27;s talk!</h1>
         <div class="form_field_subtext u-text-style-small">And make some good sh*t together.<br></div>
         <div class="form_line"></div>
-        <div class="lottie_eyes" data-w-id="1b608013-31ab-92f5-189c-e09991fa74aa" data-animation-type="lottie" data-src="documents/Animation---1746025852186.json" data-loop="1" data-direction="1" data-autoplay="1" data-is-ix2-target="0" data-renderer="svg" data-default-duration="0" data-duration="10"></div>
       </div>
       <div class="form-block w-form">
         <form id="wf-form-input" name="wf-form-input" data-name="input" action="https://api.web3forms.com/submit" method="post" class="form_inner u-vflex-stretch-between u-gap-6" data-wf-page-id="681055c829f3eb27e4f15c19" data-wf-element-id="810539d8-9fc3-88a4-48aa-6b30865aca04">

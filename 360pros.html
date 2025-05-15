@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue May 13 2025 08:39:40 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Thu May 15 2025 08:31:56 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="68105b98a263205d045fded8" data-wf-site="681055c829f3eb27e4f15c27" lang="en">
 <head>
   <meta charset="utf-8">
@@ -240,20 +240,21 @@ html:has(.nav_1_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
                   <div class="nav_1_links_text">about,</div>
                   <div class="nav_line"></div>
                 </a>
-                <link rel="prefetch" href="/about">
+                <link rel="prerender" href="/about">
               </li>
               <li class="nav_1_links_item">
                 <a href="work.html" class="nav_1_links_link is-desktop w-inline-block">
                   <div class="nav_1_links_text">work,</div>
                   <div class="nav_line"></div>
                 </a>
-                <link rel="prefetch" href="/work">
+                <link rel="prerender" href="/work">
               </li>
               <li class="nav_1_links_item">
                 <a href="playground.html" class="nav_1_links_link is-desktop w-inline-block">
                   <div class="nav_1_links_text">playground,</div>
                   <div class="nav_line"></div>
                 </a>
+                <link rel="prerender" href="/playground">
               </li>
               <li class="nav_1_links_item">
                 <a id="open-form" href="#" class="nav_1_links_link is-desktop w-inline-block">
@@ -1166,12 +1167,19 @@ button:focus-visible,
   <div class="modal_connect u-hflex-right-center">
     <div class="page-scripts w-embed w-script">
       <style>
-.connect_bottom_links .connect_bottom_link {
-  transition: opacity 0.2s ease;
-}
-.connect_bottom_links:hover .connect_bottom_link:not(:hover) {
-  opacity: 0.33;
-}
+  /* existing link hover styles */
+  .connect_bottom_links .connect_bottom_link {
+    transition: opacity 0.2s ease;
+  }
+  .connect_bottom_links:hover .connect_bottom_link:not(:hover) {
+    opacity: 0.33;
+  }
+  /* when .modal-open is on <body>, prevent scrolling but don’t reposition */
+  body.modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
 </style>
       <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -1180,19 +1188,39 @@ button:focus-visible,
     const closeBtn      = document.querySelector('.form_close_svg');
     const formRight     = document.querySelector('.form_right');
     const openBtn       = document.getElementById('open-form');
-    const openBtnMobile       = document.getElementById('open-form-mobile');
+    const openBtnMobile = document.getElementById('open-form-mobile');
     const forgotWrapper = document.querySelector('.forgot_wrapper');
     const forgotMessage = document.querySelector('.forgot_message');
     const forgotItems   = forgotMessage ? Array.from(forgotMessage.children) : [];
     const forgotBack    = document.querySelector('.forgot_back');
     const forgotClose   = document.querySelector('.forgot_close');
+    let scrollY = 0;
     // Main modal timeline
     const tl = gsap.timeline({ paused: true });
-    tl.set(modal,     { display: 'flex' })
-      .to(overlay,    { opacity: 1, duration: 0.4, ease: 'power2.out' })
+    tl
+      .eventCallback('onStart', () => {
+        // capture scroll position
+        scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        // lock scroll at current position
+        document.body.style.position = 'fixed';
+        document.body.style.top      = `-${scrollY}px`;
+        document.body.style.width    = '100%';
+        document.body.classList.add('modal-open');
+        // show the modal
+        gsap.set(modal, { display: 'flex' });
+      })
+      .to(overlay,    { opacity: 1, duration: 0.4, ease: 'power2.out' }, '<')
       .from(formRight, { x: '100%', rotationZ: 10, duration: 0.6, ease: 'power4.out' }, '<')
       .eventCallback('onReverseComplete', () => {
+        // hide modal
         gsap.set(modal, { display: 'none' });
+        // unlock scroll
+        document.body.classList.remove('modal-open');
+        document.body.style.position = '';
+        document.body.style.top      = '';
+        document.body.style.width    = '';
+        // restore scroll position
+        window.scrollTo(0, scrollY);
         if (forgotWrapper) forgotWrapper.style.display = 'none';
       });
     // Forgot prompt timeline
@@ -1203,31 +1231,27 @@ button:focus-visible,
       .eventCallback('onReverseComplete', () => {
         if (forgotWrapper) forgotWrapper.style.display = 'none';
       });
-    // Open modal
-if (openBtn)       openBtn.addEventListener('click', () => tl.play());
-if (openBtnMobile) openBtnMobile.addEventListener('click', () => tl.play());
-		// Close via X button
+    // Open modal (buttons)
+    if (openBtn)       openBtn.addEventListener('click', () => tl.play());
+    if (openBtnMobile) openBtnMobile.addEventListener('click', () => tl.play());
+    // Close via X button
     if (closeBtn) closeBtn.addEventListener('click', () => tl.reverse());
-        // Overlay click
+    // Overlay click
     if (overlay) overlay.addEventListener('click', () => {
-      // On tablet and mobile (max-width 991px), just close the modal
       if (window.matchMedia('(max-width: 991px)').matches) {
+        // on mobile/tablet, just close
         tl.reverse();
       } else {
-        // desktop: show forgot prompt
+        // on desktop, show "forgot" prompt first
         ftl.play();
       }
     });
-    // Forgot back -> hide forgot prompt only
+    // Forgot back -> hide only prompt
     if (forgotBack) forgotBack.addEventListener('click', () => ftl.reverse());
-        // Forgot close -> hide prompt then close modal
+    // Forgot close -> hide prompt then close modal
     if (forgotClose) forgotClose.addEventListener('click', () => {
-      // reverse the forgot prompt
       ftl.reverse();
-      // after a short delay, start closing the main modal (overlaps animations)
-      setTimeout(() => {
-        tl.reverse();
-      }, 200);
+      setTimeout(() => tl.reverse(), 200);
     });
   });
 </script>
@@ -1254,7 +1278,6 @@ if (openBtnMobile) openBtnMobile.addEventListener('click', () => tl.play());
         <h1 class="form_title u-text-style-h1">let&#x27;s talk!</h1>
         <div class="form_field_subtext u-text-style-small">And make some good sh*t together.<br></div>
         <div class="form_line"></div>
-        <div class="lottie_eyes" data-w-id="1b608013-31ab-92f5-189c-e09991fa74aa" data-animation-type="lottie" data-src="documents/Animation---1746025852186.json" data-loop="1" data-direction="1" data-autoplay="1" data-is-ix2-target="0" data-renderer="svg" data-default-duration="0" data-duration="10"></div>
       </div>
       <div class="form-block w-form">
         <form id="wf-form-input" name="wf-form-input" data-name="input" action="https://api.web3forms.com/submit" method="post" class="form_inner u-vflex-stretch-between u-gap-6" data-wf-page-id="68105b98a263205d045fded8" data-wf-element-id="810539d8-9fc3-88a4-48aa-6b30865aca04">
