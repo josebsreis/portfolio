@@ -2508,6 +2508,11 @@ figure {
   height: 100%;
 }
 
+.hero_main_bio_wrap.u-vflex-center-bottom {
+  position: fixed;
+  inset: auto 0% 0%;
+}
+
 .hero_main_name_svg {
   flex: none;
   width: 100%;
