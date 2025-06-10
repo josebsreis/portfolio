@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Jun 10 2025 04:33:12 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Jun 10 2025 04:38:35 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="681055c829f3eb27e4f15c12" data-wf-site="681055c829f3eb27e4f15c27" lang="en">
 <head>
   <meta charset="utf-8">
@@ -422,14 +422,12 @@ html:has(.nav_1_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
      NAVIGATION & FOOTER ANIMATION
   --------------------------------------------------------------*/
   /* Initially hide the navigation and footer components with a fade-in effect */
-  .nav_1_component,
-  .footer_component {
+  .nav_1_component {
     opacity: 0;
     transition: opacity 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   /* Make the navigation and footer visible when the 'animate' class is added */
-  .nav_1_component.animate,
-  .footer_component.animate {
+  .nav_1_component.animate {
     opacity: 1;
   }
   /*--------------------------------------------------------------
@@ -443,11 +441,6 @@ html:has(.nav_1_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
   .hero_main_bio .split-char {
     display: inline-block;
     /* Remove white-space: pre to allow normal wrapping */
-  }
-  /* Ensure the bio container maintains its dimensions during animation */
-  .hero_main_bio {
-    /* Add min-height if you know the approximate height */
-    /* min-height: 2em; */
   }
   /*--------------------------------------------------------------
      LOADER SVG ANIMATION
@@ -668,13 +661,11 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
         );
       }
     }, bioDuration + 300);
-    // Fade in additional elements (nav and footer) and re-enable interactions.
+    // Fade in nav and re-enable interactions.
     const totalAnimationDuration = bioDuration + 1000;
     setTimeout(() => {
       const navComponent = document.querySelector(".nav_1_component");
-      const bottomInfo = document.querySelector(".footer_component");
       if (navComponent) navComponent.classList.add("animate");
-      if (bottomInfo) bottomInfo.classList.add("animate");
       document.body.style.pointerEvents = "auto";
       document.body.style.userSelect = "auto";
     }, totalAnimationDuration);
@@ -711,11 +702,6 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
     const navComponent = document.querySelector(".nav_1_component");
     if (navComponent) {
       gsap.set(navComponent, { opacity: 1 });
-    }
-    // Optionally animate the footer.
-    const bottomInfo = document.querySelector(".footer_component");
-    if (bottomInfo) {
-      bottomInfo.classList.add("animate");
     }
     // Re-enable interactions after the short animation duration.
     setTimeout(() => {
