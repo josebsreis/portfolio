@@ -78,6 +78,7 @@
   --_spacing---section-space--large: var(--size--10rem);
   --_spacing---section-space--page-top: var(--size--14rem);
   --size--2rem: 2rem;
+  --focus--offset-inner: -.125rem;
   --swatch--light: #fff;
   --swatch--dark: #131313;
   --_typography---font--secondary-family: Romie, Georgia, sans-serif;
@@ -97,7 +98,6 @@
   --site--width: 90rem;
   --site--column-count: 12;
   --focus--width: .125rem;
-  --focus--offset-inner: -.125rem;
   --focus--offset-outer: .1875rem;
   --swatch--dark-overlay: #000;
   --swatch--brand-text: var(--swatch--dark);
@@ -2493,7 +2493,11 @@ figure {
 }
 
 .hero_main_bio.u-alignment-center.u-text-style-main {
-  padding: var(--size--2rem) var(--radius--main);
+  padding-top: var(--size--2rem);
+  padding-right: var(--radius--main);
+  padding-bottom: var(--size--2rem);
+  padding-left: var(--radius--main);
+  display: flow-root;
 }
 
 .hero_main_bio.u-alignment-center.u-text-style-main.is-invisible {
@@ -2569,7 +2573,7 @@ figure {
 }
 
 .nav_1_banner_close_wrap {
-  outline-offset: @var_variable-00c12ea7-2aa6-7374-315d-2ca3eb46f0e3;
+  outline-offset: var(--focus--offset-inner);
   flex: none;
   justify-content: center;
   align-items: center;
@@ -2592,7 +2596,7 @@ figure {
 
 .nav_1_logo_wrap {
   z-index: 2;
-  outline-offset: @var_variable-00c12ea7-2aa6-7374-315d-2ca3eb46f0e3;
+  outline-offset: var(--focus--offset-inner);
   justify-content: flex-start;
   align-items: center;
   display: flex;
@@ -2712,7 +2716,7 @@ figure {
 }
 
 .nav_1_search_btn_wrap {
-  outline-offset: @var_variable-00c12ea7-2aa6-7374-315d-2ca3eb46f0e3;
+  outline-offset: var(--focus--offset-inner);
   justify-content: center;
   align-items: center;
   margin-left: -1rem;
@@ -2798,7 +2802,7 @@ figure {
 .nav_1_skip_wrap {
   z-index: 2;
   border-width: var(--border-width--main);
-  outline-offset: @var_variable-00c12ea7-2aa6-7374-315d-2ca3eb46f0e3;
+  outline-offset: var(--focus--offset-inner);
   color: var(--_theme---text);
   margin: .5rem;
   padding: .5rem;

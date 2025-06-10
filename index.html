@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue May 27 2025 07:40:06 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Jun 10 2025 03:54:34 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="681055c829f3eb27e4f15c12" data-wf-site="681055c829f3eb27e4f15c27" lang="en">
 <head>
   <meta charset="utf-8">
@@ -435,19 +435,19 @@ html:has(.nav_1_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
   /*--------------------------------------------------------------
      HERO BIO TEXT ANIMATION
   --------------------------------------------------------------*/
-  /* Hide each character of the bio text initially */
-  .hero_main_bio span {
-    opacity: 0;
+  /* GSAP SplitText styling for proper word wrapping */
+  .hero_main_bio .split-word {
     display: inline-block;
-    transition: opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+    /* Allow words to wrap normally */
   }
-  /* Fade in each character when the 'animate' class is applied */
-  .hero_main_bio span.animate {
-    opacity: 1;
-  }
-  /* Ensure inline-block display for hero_main_bio spans */
-  .hero_main_bio span {
+  .hero_main_bio .split-char {
     display: inline-block;
+    /* Remove white-space: pre to allow normal wrapping */
+  }
+  /* Ensure the bio container maintains its dimensions during animation */
+  .hero_main_bio {
+    /* Add min-height if you know the approximate height */
+    /* min-height: 2em; */
   }
   /*--------------------------------------------------------------
      LOADER SVG ANIMATION
@@ -592,8 +592,18 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
       </div>
     </section>
     <div id="overlay_barba" class="overlay_barba"></div>
-    <div bind="13e2298f-48ae-cab4-70d7-71b8f8777f38" class="page-scripts w-embed w-script">
+    <div class="page-scripts w-embed w-script">
       <script data-barba-script="">
+  // Wait for GSAP to be loaded before running animations
+  function waitForGSAP(callback) {
+    if (typeof gsap !== 'undefined' && typeof SplitText !== 'undefined') {
+      // Register GSAP plugins
+      gsap.registerPlugin(SplitText);
+      callback();
+    } else {
+      setTimeout(() => waitForGSAP(callback), 50);
+    }
+  }
   // ------------------------------
   // Full Animation
   // ------------------------------
@@ -606,39 +616,29 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
     const svgLetters = svgContainer.querySelectorAll("path");
     let bioDuration = 0;
     if (bioElement) {
-      const text = bioElement.textContent;
-      bioElement.innerHTML = "";
-      let globalIndex = 0;
-      // Split the text into words so words remain together.
-      const words = text.split(" ");
-      words.forEach((word, wordIndex) => {
-        const wordSpan = document.createElement("span");
-        word.split("").forEach(letter => {
-          const letterSpan = document.createElement("span");
-          letterSpan.textContent = letter;
-          // Set a staggered delay of 10ms per character.
-          letterSpan.style.transitionDelay = `${globalIndex * 10}ms`;
-          globalIndex++;
-          wordSpan.appendChild(letterSpan);
-        });
-        bioElement.appendChild(wordSpan);
-        if (wordIndex < words.length - 1) {
-          const spaceSpan = document.createElement("span");
-          spaceSpan.textContent = "\u00A0";
-          spaceSpan.style.transitionDelay = `${globalIndex * 10}ms`;
-          globalIndex++;
-          bioElement.appendChild(spaceSpan);
+      // Use GSAP SplitText to split the bio text into words and chars
+      const bioSplit = new SplitText(bioElement, { 
+        type: "words,chars",
+        wordsClass: "split-word",
+        charsClass: "split-char"
+      });
+      // Set initial state for characters - just invisible, no transform
+      gsap.set(bioSplit.chars, { opacity: 0 });
+      // Make bio container visible
+      bioElement.style.opacity = "1";
+      // Animate characters with simple typewriter effect
+      gsap.to(bioSplit.chars, {
+        opacity: 1,
+        duration: 0.05, // Very quick fade-in per character
+        ease: "none", // No easing for instant appearance
+        stagger: 0.03, // 30ms between each character for typewriter speed
+        onComplete: function() {
+          // Clear transforms and keep the structure
+          gsap.set(bioSplit.chars, { clearProps: "all" });
         }
       });
-      // Make bio visible.
-      bioElement.style.opacity = "1";
-      // Trigger the bio text animation on the next frame.
-      requestAnimationFrame(() => {
-        const bioSpans = bioElement.querySelectorAll("span");
-        bioSpans.forEach(span => span.classList.add("animate"));
-      });
-      // Calculate total duration for the bio animation.
-      bioDuration = globalIndex * 10 + 300;
+      // Calculate total duration for the bio animation (typewriter effect)
+      bioDuration = (bioSplit.chars.length * 30) + 200;
     }
     // Animate the SVG letters after the bio animation.
     setTimeout(() => {
@@ -653,13 +653,19 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
     setTimeout(() => {
       const instructions = document.querySelector(".hero_instructions_text");
       if (instructions) {
-        // Ensure initial state.
-        instructions.style.opacity = "0";
-        instructions.style.filter = "blur(20px)";
-        // Trigger the transition.
-        instructions.style.transition = "opacity 0.4s ease, filter 0.4s ease";
-        instructions.style.opacity = "0.35";
-        instructions.style.filter = "blur(0px)";
+        // Use GSAP for smoother instructions animation
+        gsap.fromTo(instructions, 
+          {
+            opacity: 0,
+            filter: "blur(20px)"
+          },
+          {
+            opacity: 0.35,
+            filter: "blur(0px)",
+            duration: 0.4,
+            ease: "power2.out"
+          }
+        );
       }
     }, bioDuration + 300);
     // Fade in additional elements (nav and footer) and re-enable interactions.
@@ -677,10 +683,10 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
   // Short Animation
   // ------------------------------
   function runShortAnimation() {
-    // Immediately show bio info.
+    // Immediately show bio info with GSAP for consistency
     const bioElement = document.querySelector(".hero_main_bio");
     if (bioElement) {
-      bioElement.style.opacity = "1";
+      gsap.set(bioElement, { opacity: 1 });
     }
     // Animate SVG letters after a short delay.
     const svgContainer = document.querySelector(".hero_main_name_svg-set");
@@ -693,17 +699,18 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
         svgLetters.forEach(letter => letter.classList.add("animate"));
       });
     }, 300);
-    // For instructions text in short animation, just display it without animation.
+    // For instructions text in short animation, use GSAP for instant display
     const instructions = document.querySelector(".hero_instructions_text");
     if (instructions) {
-      instructions.style.transition = "none";
-      instructions.style.opacity = "0.35";
-      instructions.style.filter = "blur(0px)";
+      gsap.set(instructions, {
+        opacity: 0.35,
+        filter: "blur(0px)"
+      });
     }
-    // Ensure the nav remains visible.
+    // Ensure the nav remains visible with GSAP
     const navComponent = document.querySelector(".nav_1_component");
     if (navComponent) {
-      navComponent.style.opacity = "1";
+      gsap.set(navComponent, { opacity: 1 });
     }
     // Optionally animate the footer.
     const bottomInfo = document.querySelector(".footer_component");
@@ -722,20 +729,23 @@ html:not(.wf-design-mode) .styleguide_guide_wrap {
   function isMainPage() {
     return window.location.pathname === "/";
   }
-  if (isMainPage()) {
-    if (window._barbaTransition) {
-      runShortAnimation();
-    } else {
-      if (!sessionStorage.getItem("visitedPage")) {
-        runFullAnimation();
-        sessionStorage.setItem("visitedPage", "true");
-      } else {
+  // Wait for GSAP to load before starting animations
+  waitForGSAP(() => {
+    if (isMainPage()) {
+      if (window._barbaTransition) {
         runShortAnimation();
+      } else {
+        if (!sessionStorage.getItem("visitedPage")) {
+          runFullAnimation();
+          sessionStorage.setItem("visitedPage", "true");
+        } else {
+          runShortAnimation();
+        }
       }
+    } else {
+      runShortAnimation();
     }
-  } else {
-    runShortAnimation();
-  }
+  });
 </script>
     </div>
     <div bind="89894b6d-cf3f-dfb6-51d8-63b0d19309e1" data-barba="wrapper" data-barba-script="" class="page_code_wrap u-display-none">
