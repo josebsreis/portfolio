@@ -2489,7 +2489,7 @@ figure {
 }
 
 .hero_main_bio {
-  max-width: 35rem;
+  max-width: 70ch;
 }
 
 .hero_main_bio.u-alignment-center.u-text-style-main {
