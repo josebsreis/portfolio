@@ -4912,7 +4912,6 @@ figure {
   --_theme---text-link--border-hover: var(--swatch--brand-500);
   --_theme---selection--text: var(--swatch--brand-text);
   --_theme---selection--background: var(--swatch--brand-300);
-  mix-blend-mode: difference;
   position: fixed;
 }
 
@@ -5412,9 +5411,12 @@ figure {
   outline-offset: var(--focus--offset-inner);
   justify-content: flex-start;
   align-items: center;
-  width: 6rem;
   display: flex;
   position: relative;
+}
+
+.nav_desktop_logo.w--current:where(.w-variant-dd866659-1d7d-6447-6461-66ca86ca367f) {
+  mix-blend-mode: difference;
 }
 
 .modal_backdrop {
@@ -10463,6 +10465,121 @@ figure {
   height: 1em;
   margin-left: 1em;
   margin-right: 1em;
+}
+
+.page-nav__wrapper {
+  border: 1px solid var(--_theme---border);
+  background-color: var(--_theme---background);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-radius: 50em;
+  padding: 0;
+}
+
+.page-nav__list {
+  border-radius: 50em;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-nav__indicator {
+  z-index: 2;
+  background-color: #fff;
+  border-radius: 100em;
+  width: 2.5em;
+  height: auto;
+  margin-bottom: auto;
+  position: absolute;
+  left: -2.5em;
+}
+
+.page-nav__btn {
+  z-index: 3;
+  cursor: pointer;
+  height: 2em;
+  color: inherit;
+  justify-content: center;
+  align-items: center;
+  padding-left: .75em;
+  padding-right: .75em;
+  text-decoration: none;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-nav__btn:where(.w-variant-dd866659-1d7d-6447-6461-66ca86ca367f), .page-nav__btn.w--current:where(.w-variant-dd866659-1d7d-6447-6461-66ca86ca367f) {
+  mix-blend-mode: difference;
+}
+
+.page-nav__btn.is--after {
+  z-index: 1;
+  width: 2.5em;
+  height: 2.5em;
+  padding-left: 0;
+  padding-right: 0;
+  position: absolute;
+  left: 100%;
+}
+
+.page-nav__btn.is--before {
+  z-index: 1;
+  width: 2.3em;
+  height: 1.3em;
+  padding-left: 0;
+  padding-right: 0;
+  position: absolute;
+  right: 100%;
+}
+
+.page-nav_btn {
+  z-index: 3;
+  cursor: pointer;
+  height: 2em;
+  color: inherit;
+  justify-content: center;
+  align-items: center;
+  padding-left: .75em;
+  padding-right: .75em;
+  text-decoration: none;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-nav_btn.is--after {
+  z-index: 1;
+  width: 2.5em;
+  height: 2.5em;
+  padding-left: 0;
+  padding-right: 0;
+  position: absolute;
+  left: 100%;
+}
+
+.page-nav_btn.is--before {
+  z-index: 1;
+  width: 2.5em;
+  height: 1.5em;
+  padding-left: 0;
+  padding-right: 0;
+  position: absolute;
+  right: 100%;
+}
+
+.page-nav__btn-text {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  display: flex;
+}
+
+.page-nav__btn-text.is--duplicate {
+  position: absolute;
+  top: 100%;
 }
 
 @media screen and (max-width: 991px) {
