@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Fri Apr 10 2026 13:01:28 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Mon Apr 13 2026 16:17:02 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="69903d73e6184bf87deea08b" data-wf-site="69903d72e6184bf87deea03c" lang="en">
 <head>
   <meta charset="utf-8">
@@ -76,8 +76,8 @@ select:has(option[value=""]:checked) {
 }
 /* Selection Color */
 ::selection {
-	background-color: var(--_theme---selection--background);
-	color: var(--_theme---selection--text);
+  background-color: var(--_theme---text);
+  color: var(--_theme---background);
 }
 /* Margin Trim */
 :is(.u-margin-trim,.w-richtext,.u-content-wrapper,[class*="u-container"],[class*="u-layout-column"]) > :not(:not(.w-condition-invisible,.u-cover-absolute,.u-ignore-trim) ~ :not(.w-condition-invisible,.u-cover-absolute,.u-ignore-trim)),
@@ -826,115 +826,6 @@ html.wf-design-mode .guide_wrap {
       </div>
     </div>
     <div data-wf--nav--nav-position="default" class="nav_component">
-      <div class="u-embed-css w-embed">
-        <style>
-:root {
-	--nav--menu-open-duration: 400ms;
-	--nav--menu-close-duration: 400ms;
-	--nav--dropdown-open-duration: 400ms;
-	--nav--dropdown-close-duration: 400ms;
-}
-body:has(.nav_component .w-nav-button.w--open):not(:has(.nav_desktop_wrap:not(.w-condition-invisible))) { overflow: hidden; }
-/* on smaller screens */
-@media (width < 65em) {
-	/* disable scroll when mobile menu is open */
-	body:has(.nav_component .w-nav-button.w--open) { overflow: hidden; }
-}
-/* on larger screens */
-@container (min-width: 65em) {
-	/* show desktop nav & dropdown backdrop */
-	.nav_desktop_wrap, .nav_dropdown_backdrop { display: block; }
-	/* hide mobile nav & mobile menu backdrop */
-	.nav_desktop_wrap:not(.w-condition-invisible) ~ .nav_mobile_wrap, .nav_desktop_wrap:not(.w-condition-invisible) ~ .nav_menu_backdrop { display: none; }
-}
-/* dropdown list: initial state */
-html:not(.wf-design-mode) .nav_dropdown_component > .w-dropdown-list {
-	/* removes display none to enable css transitions */
-	display: grid !important;
-	grid-template-columns: minmax(0, 1fr);
-	/* sets list to 0 height by default */
-	grid-template-rows: 0fr;
-	transition: grid-template-rows var(--nav--dropdown-close-duration);
-	/* makes list content not focusable when closed */
-	visibility: hidden;
-	opacity: 0;
-}
-/* makes list content focusable when opened */
-html:not(.wf-design-mode) .nav_dropdown_component > .w-dropdown-list.w--open {
-	visibility: visible;
-	opacity: 1;
-}
-/* sets list child to overflow hidden to enable css height transition */
-.nav_dropdown_component > .w-dropdown-list > * {
-	overflow: hidden;
-}
-/* set open state of dropdown list */
-.nav_dropdown_component:has(> .w-dropdown-toggle[aria-expanded="true"]) > .w-dropdown-list {
-	--nav--dropdown-close-duration: var(--nav--dropdown-open-duration);
-	grid-template-rows: 1fr;
-}
-/* on desktop, delay dropdown opening if another dropdown is open */
-.nav_desktop_wrap:has(.nav_dropdown_component > .w-dropdown-toggle.w--open[aria-expanded="false"]) .nav_dropdown_component:has(> .w--open[aria-expanded="true"]) > .w-dropdown-list {
-	transition-delay: var(--nav--dropdown-close-duration);
-}
-/* reveal dropdown backdrop when dropdown open */
-.nav_dropdown_backdrop {
-	transition: opacity var(--nav--dropdown-close-duration);
-}
-.nav_component:has(.nav_dropdown_component > [aria-expanded="true"]) .nav_dropdown_backdrop {
-	opacity: 1;
-}
-/* reveal mobile menu backdrop on menu open */
-.nav_menu_backdrop {
-	transition: opacity var(--nav--menu-close-duration);
-}
-.nav_component:has(.w-nav-button.w--open) .nav_menu_backdrop {
-	opacity: 1;
-}
-/* menu animations */
-@keyframes menuOpen {
- from { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
- to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-}
-@keyframes menuClose {
- from { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
- to { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
-}
-/* menu open */
-.nav_component:has(.w-nav-button.w--open) .w-nav-menu {
-	animation: menuOpen var(--nav--menu-open-duration) ease-in-out forwards;
-}
-/* menu close */
-.nav_component:has(.w-nav-button:not(.w--open)) .w-nav-menu {
-	animation: menuClose var(--nav--menu-close-duration) ease-in-out forwards;
-}
-/* position overflow to top of screen */
-.nav_component .w-nav-overlay {
- top: 0;
- min-height: 100vh;
-}
-/* open dropdown on mobile */
-.nav_mobile_wrap [data-open-on-mobile] > .w-dropdown-toggle {
-	display: none;
-}
-.nav_mobile_wrap [data-open-on-mobile] > .w-dropdown-list {
-	visibility: visible !important;
-	opacity: 1 !important;
-	display: block !important;
-	grid-template-rows: 1fr !important;
-}
-/* nav banner */
-html:has(.nav_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
-	--nav--height-total: calc(var(--nav--banner-height) + var(--nav--height) + var(--nav--spacing-outer-vertical));
-}
-.hide-nav-banner .nav_banner_wrap {
-	display: none;
-}
-.wf-design-mode .nav_mobile_menu_wrap {
-	width: 100%;
-}
-</style>
-      </div>
       <header class="nav_desktop_wrap u-container-full">
         <div class="nav_desktop_contain">
           <div class="nav_desktop_layout">
@@ -956,31 +847,6 @@ html:has(.nav_banner_wrap:not(.w-condition-invisible)):not(.hide-nav-banner) {
           </div>
         </div>
       </header>
-      <div class="nav_dropdown_backdrop"></div>
-      <div class="nav_menu_backdrop"></div>
-      <div class="u-embed-js w-embed w-script">
-        <script>
-if (sessionStorage.getItem("hide-nav-banner") === "true") {
-  document.documentElement.classList.add("hide-nav-banner");
-}
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".nav_banner_close_wrap").forEach((button) => {
-    button.addEventListener("click", function () {
-      sessionStorage.setItem("hide-nav-banner", "true");
-      document.documentElement.classList.add("hide-nav-banner");
-    });
-  });
-  document.querySelectorAll(".nav_skip_wrap").forEach(function (link) {
-    const target = document.querySelector("main");
-    if (!target) return;
-    link.addEventListener("click", function () {
-      target.setAttribute("tabindex", "-1");
-      target.focus();
-    });
-  });
-});
-</script>
-      </div>
     </div>
     <main id="main" class="page_main">
       <section class="u-section">
