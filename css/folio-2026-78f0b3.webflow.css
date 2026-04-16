@@ -10362,7 +10362,7 @@ figure {
 }
 
 .footer_header {
-  max-width: 16ch;
+  max-width: 29ch;
   padding-bottom: var(--_spacing---space--6-40px);
 }
 
@@ -10819,7 +10819,7 @@ figure {
     display: flex;
   }
 
-  .footer_header.u-text-style-h1 {
+  .footer_header.u-text-style-h3 {
     --_text-style---font-family: var(--_typography---font--primary-family);
     --_text-style---font-size: var(--_typography---font-size--h3);
     --_text-style---line-height: var(--_typography---line-height--medium);
@@ -10881,7 +10881,7 @@ figure {
     display: none;
   }
 
-  .faq_title.u-text-style-display {
+  .faq_title.u-text-style-h1 {
     --_text-style---font-family: var(--_typography---font--primary-family);
     --_text-style---font-size: var(--_typography---font-size--h2);
     --_text-style---line-height: var(--_typography---line-height--small);
@@ -11114,7 +11114,7 @@ figure {
     width: 100%;
   }
 
-  .footer_header.u-text-style-h1 {
+  .footer_header.u-text-style-h3 {
     padding-bottom: var(--_spacing---space--8-64px);
   }
 
@@ -11198,7 +11198,7 @@ figure {
     bottom: .5em;
   }
 
-  .faq_title.u-text-style-display {
+  .faq_title.u-text-style-h1 {
     --_text-style---font-family: var(--_typography---font--primary-family);
     --_text-style---font-size: var(--_typography---font-size--h3);
     --_text-style---line-height: var(--_typography---line-height--medium);
@@ -11359,7 +11359,7 @@ figure {
     font-size: 1em;
   }
 
-  .footer_header.u-text-style-h1 {
+  .footer_header.u-text-style-h3 {
     padding-bottom: var(--_spacing---section-space--main-112px);
   }
 }
