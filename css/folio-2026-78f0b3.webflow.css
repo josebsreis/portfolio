@@ -10821,12 +10821,12 @@ figure {
 
   .footer_header.u-text-style-h3 {
     --_text-style---font-family: var(--_typography---font--primary-family);
-    --_text-style---font-size: var(--_typography---font-size--h3);
-    --_text-style---line-height: var(--_typography---line-height--medium);
+    --_text-style---font-size: var(--_typography---font-size--h4);
+    --_text-style---line-height: var(--_typography---line-height--large);
     --_text-style---font-weight: var(--_typography---font--primary-medium);
     --_text-style---letter-spacing: var(--_typography---letter-spacing--tight);
     --_text-style---text-wrap: balance;
-    --_text-style---margin-bottom: var(--_spacing---space--5-32px);
+    --_text-style---margin-bottom: var(--_spacing---space--4-24px);
     --_text-style---margin-top: var(--_spacing---space--7-48px);
     --_text-style---trim-top: var(--_typography---font--primary-trim-top);
     --_text-style---trim-bottom: var(--_typography---font--primary-trim-bottom);
@@ -11115,6 +11115,7 @@ figure {
   }
 
   .footer_header.u-text-style-h3 {
+    max-width: none;
     padding-bottom: var(--_spacing---space--8-64px);
   }
 
@@ -11343,6 +11344,10 @@ figure {
     width: 150%;
   }
 
+  .clients_more.u-text-style-main.u-color-faded {
+    margin-bottom: 4em;
+  }
+
   .project_hero_contain.u-container-full {
     width: calc(100% - var(--site--margin) * 2);
   }
@@ -11361,6 +11366,17 @@ figure {
 
   .footer_header.u-text-style-h3 {
     padding-bottom: var(--_spacing---section-space--main-112px);
+    --_text-style---font-family: var(--_typography---font--primary-family);
+    --_text-style---font-size: var(--_typography---font-size--h5);
+    --_text-style---line-height: var(--_typography---line-height--medium);
+    --_text-style---font-weight: var(--_typography---font--primary-medium);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--tight);
+    --_text-style---text-wrap: balance;
+    --_text-style---margin-bottom: var(--_spacing---space--4-24px);
+    --_text-style---margin-top: var(--_spacing---space--7-48px);
+    --_text-style---trim-top: var(--_typography---font--primary-trim-top);
+    --_text-style---trim-bottom: var(--_typography---font--primary-trim-bottom);
+    --_text-style---text-transform: var(--_typography---text-transform--none);
   }
 }
 
