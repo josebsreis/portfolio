@@ -11215,8 +11215,8 @@ figure {
 
   .accordion-css__item-h3.u-text-style-h5 {
     --_text-style---font-family: var(--_typography---font--primary-family);
-    --_text-style---font-size: var(--_typography---font-size--h5);
-    --_text-style---line-height: var(--_typography---line-height--medium);
+    --_text-style---font-size: var(--_typography---font-size--h6);
+    --_text-style---line-height: var(--_typography---line-height--small);
     --_text-style---font-weight: var(--_typography---font--primary-medium);
     --_text-style---letter-spacing: var(--_typography---letter-spacing--tight);
     --_text-style---text-wrap: balance;
@@ -11515,6 +11515,15 @@ figure {
 
   #w-node-_1ecbf5e8-eafa-9b95-d94f-4346b6d97007-7deea085, #w-node-_586efc21-b63c-0435-104e-64a37bc91bd2-7deea085, #w-node-_0f7f9c03-22f5-73b3-9c8f-6ebefd93dac8-7deea085, #w-node-_050c368f-68a7-b4c4-da84-f78b04e3120a-7deea085, #w-node-a8876b28-5e01-5bfa-49de-289e3d6caa30-7deea085 {
     grid-area: span 1 / span 12 / span 1 / span 12;
+  }
+
+  #w-node-_4e3109fc-f73f-7aa9-1036-d777d09e948f-7deea085 {
+    grid-row-start: 2;
+    grid-column-end: 10;
+  }
+
+  #w-node-ac075111-a728-f888-fcf4-33659a067cbd-7deea085 {
+    grid-area: span 1 / span 3 / span 1 / span 3;
   }
 
   #w-node-e1adab43-4b50-2122-d24b-38041fb89325-1fb89324 {
